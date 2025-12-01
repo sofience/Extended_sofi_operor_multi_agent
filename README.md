@@ -1,2 +1,1 @@
-# Extended_sofi_operor_multi_agent
-minimal, production-ready multi-agent kernel that eliminates role collapse, infinite planner-critic loops, and credit-assignment failure. Compatible with any LLM (OpenAI, Anthropic, DeepSeek, Qwen, Llama, Grok, etc.).
+What should a market-ready, platform-agnostic multi-agent look like—one that avoids the vendor lock-in and self-collision issues of current systems?

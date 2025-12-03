@@ -1,6 +1,8 @@
 Sofience-Operor
 What should a market-ready, platform-agnostic multi-agent look like—one that avoids the vendor lock-in and self-collision issues of current systems?
 A multi-agent framework built on a philosophical foundation: Operor ergo sum (I operate, therefore I am).
+�
+이미지 불러오기
 Why This Exists
 Current multi-agent systems share common pain points:
 Problem

@@ -82,7 +82,6 @@ def test_delta_phi_propagation_env_change():
         base["severity"],
     )
 
-
 # -------------------------------
 # Multi-agent parallelism Test
 # -------------------------------
@@ -110,7 +109,7 @@ def test_multi_agent_parallelism_independent_runtimes():
     # TraceLog 인스턴스가 서로 다른 객체인지 확인 (공유/글로벌 상태가 아닌지 체크)
     trace_ids = {id(rt.trace_log) for rt in runtimes}
     assert len(trace_ids) == len(runtimes)
-```0
+
 # -------------------------------
 # Δφ Propagation Test 추가됨
 # -------------------------------

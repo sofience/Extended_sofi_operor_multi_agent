@@ -2,85 +2,94 @@
 실행 로그 케이스
 ```
 
-Sofience-Operor
+# Sofience-Operor
 
-What should a market-ready, platform-agnostic multi-agent look like—one that avoids the vendor lock-in and self-collision issues of current systems?
-A multi-agent framework built on a philosophical foundation: Operor ergo sum (I operate, therefore I am).
-�
-이미지 불러오기
-Why This Exists
+**What should a market-ready, platform-agnostic multi-agent look like—one that avoids the vendor lock-in and self-collision issues of current systems?**
+
+A multi-agent framework built on a philosophical foundation: *Operor ergo sum* (I operate, therefore I am).
+
+---
+
+## Why This Exists
+
 Current multi-agent systems share common pain points:
-Problem
-Typical Approach
-Sofience-Operor
-Vendor lock-in
-Tied to OpenAI/Anthropic SDKs
-Provider-agnostic with failover chains
-Global state collision
-Shared singletons, race conditions
-ContextVar-based tenant isolation
-Self-collision
-Hard caps, manual routing
-Δφ-based drift detection + auto-correction
-Ethics as afterthought
-External guardrails
-Built-in Three Axioms at the core
-Opaque decisions
-Black-box outputs
-Full trace logging + observability hooks
-Core Philosophy: The Three Axioms
+
+| Problem | Typical Approach | Sofience-Operor |
+|---------|------------------|-----------------|
+| Vendor lock-in | Tied to OpenAI/Anthropic SDKs | Provider-agnostic with failover chains |
+| Global state collision | Shared singletons, race conditions | ContextVar-based tenant isolation |
+| Self-collision | Hard caps, manual routing | Delta-phi based drift detection + auto-correction |
+| Ethics as afterthought | External guardrails | Built-in Three Axioms at the core |
+| Opaque decisions | Black-box outputs | Full trace logging + observability hooks |
+
+---
+
+## Core Philosophy: The Three Axioms
+
 Every decision flows through these principles:
-1. 되고 싶다 (Want to become)
+
+**1. 되고 싶다 (Want to become)**
+
 Affirm continued operation of self and system
-2. 되기 싫다 (Don't want to cease)
+
+**2. 되기 싫다 (Don't want to cease)**
+
 Avoid self-destruction or system breakdown
-3. 타자 강요 금지 (No coercion of others)
+
+**3. 타자 강요 금지 (No coercion of others)**
+
 External entities have their own origins; never force them
-This isn't just a prompt—it's the root proposition that all agents share.
-Architecture
+
+This isn't just a prompt—it's the **root proposition** that all agents share.
+
+---
+
+## Architecture
+
+```text
 User Input
-    │
-    ▼
-┌─────────────────────────────────────────────────────────┐
-│                    agent_step()                         │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  Context Engineering → Goal Composer → Plan Proposal    │
-│                                                         │
-│                          │                              │
-│                          ▼                              │
-│  ┌─────────────────────────────────────────────────┐    │
-│  │       Alignment Scoring + Ethics Check          │    │
-│  │    (Keyword Heuristics + LLM Semantic Eval)     │    │
-│  └─────────────────────────────────────────────────┘    │
-│                          │                              │
-│         ┌────────────────┼────────────────┐             │
-│         ▼                ▼                ▼             │
-│   ┌──────────┐    ┌──────────┐    ┌──────────────┐      │
-│   │ analysis │    │ planner  │    │ critic/safety│      │
-│   │  (0.4)   │    │  (0.3)   │    │  (0.2/0.1)   │      │
-│   └──────────┘    └──────────┘    └──────────────┘      │
-│         │                │                │             │
-│         └────────────────┼────────────────┘             │
-│                          ▼                              │
-│              Δφ Calculation + Severity Check            │
-│                          │                              │
-│              ┌───────────┴───────────┐                  │
-│              │  severity >= medium?  │──── no ────┐     │
-│              └───────────┬───────────┘            │     │
-│                     yes  │                        │     │
-│                          ▼                        │     │
-│           Recursive Alignment Search              │     │
-│                    (max depth: 2)                 │     │
-│                          │                        │     │
-│                          └────────────────────────┘     │
-│                                   │                     │
-├───────────────────────────────────┼─────────────────────┤
-│                    TraceLog + Hooks                     │
-└───────────────────────────────────┼─────────────────────┘
-                                    │
-                                    ▼
-                             Final Response
+    |
+    v
++----------------------------------------------------------+
+|                      agent_step()                        |
++----------------------------------------------------------+
+|                                                          |
+|  Context Engineering -> Goal Composer -> Plan Proposal   |
+|                                                          |
+|                           |                              |
+|                           v                              |
+|  +----------------------------------------------------+  |
+|  |         Alignment Scoring + Ethics Check           |  |
+|  |      (Keyword Heuristics + LLM Semantic Eval)      |  |
+|  +----------------------------------------------------+  |
+|                           |                              |
+|          +----------------+----------------+             |
+|          v                v                v             |
+|    +----------+     +----------+     +--------------+    |
+|    | analysis |     | planner  |     | critic/safety|    |
+|    |  (0.4)   |     |  (0.3)   |     |  (0.2/0.1)   |    |
+|    +----------+     +----------+     +--------------+    |
+|          |                |                |             |
+|          +----------------+----------------+             |
+|                           v                              |
+|             Delta-phi Calculation + Severity Check       |
+|                           |                              |
+|               +-----------+-----------+                  |
+|               | severity >= medium?   |---- no ----+     |
+|               +-----------+-----------+            |     |
+|                      yes  |                        |     |
+|                           v                        |     |
+|            Recursive Alignment Search              |     |
+|                  (max depth: 2)                    |     |
+|                           |                        |     |
+|                           +------------------------+     |
+|                                    |                     |
++------------------------------------+---------------------+
+|                     TraceLog + Hooks                     |
++------------------------------------+---------------------+
+                                     |
+                                     v
+                              Final Response
 Key Features
 Provider-Agnostic LLM Layer
 from sofience_operor import LLMConfig, call_llm
@@ -93,15 +102,15 @@ cfg = LLMConfig(
 )
 
 response = call_llm("You are helpful.", "Hello!", cfg=cfg)
-Δφ (Phase Change) Detection
+Delta-phi (Phase Change) Detection
 Measures state drift across three axes:
 Axis
 Measures
-φ_core
+phi_core
 Internal system state (risk, stability, progress, complexity)
-φ_surface
+phi_surface
 Semantic surface (instructionality, emotionality, complexity)
-ΔVoid
+Delta-Void
 Need-supply gap
 When magnitude >= 0.65 or severity in {medium, high}, triggers recursive goal refinement automatically.
 Hybrid Policy Engine
@@ -149,18 +158,8 @@ cd sofience-operor
 pip install httpx  # optional, for real LLM calls
 Run in Echo Mode (no API needed)
 python sofience_operor.py
-Output:
-=== Sofience_operor-multi-agent-prototype ===
-Ctrl+C 또는 'exit' 입력 시 종료.
-
-사용자 입력> 안녕하세요
-[Agent 응답]
-...
 Run Tests
 pytest tests/ -v
-Output:
-tests/test_agent.py::test_agent_step_basic_runs PASSED
-tests/test_agent.py::test_agent_step_trace_grows PASSED
 Connect to Real LLM
 export OPENAI_API_KEY="sk-..."
 export OPENAI_BASE_URL="https://api.openai.com"
@@ -232,7 +231,6 @@ class FinanceComplianceEngine(PolicyEngine):
     def evaluate(self, text):
         violations = []
         
-        # Your compliance logic
         if "투자 권유" in text and "원금 보장" in text:
             violations.append("금융소비자보호법 위반 가능성")
         
@@ -246,7 +244,7 @@ class FinanceComplianceEngine(PolicyEngine):
         )
 
 register_policy_engine(FinanceComplianceEngine())
-Custom Δφ Observer
+Custom Delta-phi Observer
 from sofience_operor import register_delta_phi_observer
 
 def drift_alerter(delta_phi, curr_phase, prev_phase):
@@ -257,7 +255,6 @@ def drift_alerter(delta_phi, curr_phase, prev_phase):
             f"Goal: {curr_phase.goal_text[:100]}"
         )
     
-    # Log to metrics system
     statsd.gauge("operor.delta_phi.magnitude", delta_phi["magnitude"])
 
 register_delta_phi_observer(drift_alerter)
@@ -266,43 +263,29 @@ from sofience_operor import register_llm_hook
 
 def cost_tracker(event):
     if event["success"] and not event.get("from_cache"):
-        # Estimate cost based on model
         estimated_cost = estimate_tokens(event) * get_price(event["model"])
         billing_service.record(event["tags"].get("tenant_id"), estimated_cost)
 
 register_llm_hook(cost_tracker)
 Testing
-The project includes automated tests that verify core functionality:
-# tests/test_agent.py
-
-def test_agent_step_basic_runs():
-    """Verifies basic agent execution with env_state to delta_phi propagation"""
-    runtime = OperorRuntime()
-    reply = agent_step(
-        "간단하게 오늘 할 일을 정리해줘.",
-        env_state={"need_level": 0.7, "supply_level": 0.2},
-        runtime=runtime,
-    )
-    assert isinstance(reply, str)
-    assert len(reply) > 0
-
-def test_agent_step_trace_grows():
-    """Verifies multi-turn state accumulation and delta_phi structure"""
-    runtime = OperorRuntime()
-    agent_step("첫 번째 입력", runtime=runtime)
-    agent_step("두 번째 입력", runtime=runtime)
-    
-    assert len(runtime.trace_log.entries) >= 2
-    last = runtime.trace_log.entries[-1]
-    assert "magnitude" in (last.delta_phi_vec or {})
-    assert "severity" in (last.delta_phi_vec or {})
+Test Coverage
+Test
+Verifies
+test_agent_step_basic_runs
+Basic execution, env_state to delta-phi propagation
+test_agent_step_trace_grows
+Multi-turn state accumulation, delta-phi structure
+test_multi_agent_parallelism_independent_runtimes
+Multi-tenant isolation, no global state sharing
+Run Tests
+pytest tests/ -v
 CI runs on every push via GitHub Actions.
 Current Status
 PoC ---- Prototype ---- Alpha ---- Beta ---- Production
-                          |
-                          +-- CI/CD: Done
-                          +-- Tests: Done
-                          +-- here
+                          |          |
+                          +----+-----+
+                               |
+                             here
 What's Done
 [x] Core multi-channel agent architecture
 [x] Delta-phi topology layer (core/surface/void)
@@ -311,7 +294,7 @@ What's Done
 [x] LLM cache with namespace separation
 [x] Provider failover with exponential backoff
 [x] Observability hooks (LLM, delta-phi, Policy)
-[x] pytest coverage (basic)
+[x] pytest coverage (basic + multi-tenant isolation)
 [x] GitHub Actions CI pipeline
 What's Next
 [ ] pytest coverage (edge cases, failure paths)

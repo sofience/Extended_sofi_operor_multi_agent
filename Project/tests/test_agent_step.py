@@ -1,4 +1,11 @@
+import os
+import sys
+
+# tests 폴더 기준 한 단계 위(Project 디렉터리)를 import 경로에 추가
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
 from sofi_operor_multi_agent_prototype import agent_step, OperorRuntime
+
 
 def test_agent_step_basic_runs():
     runtime = OperorRuntime()
@@ -12,6 +19,7 @@ def test_agent_step_basic_runs():
     assert isinstance(reply, str)
     assert len(reply) > 0
     assert "채널" in reply or "플랜" in reply or "Sofience–Operor" in reply
+
 
 def test_agent_step_trace_grows():
     runtime = OperorRuntime()

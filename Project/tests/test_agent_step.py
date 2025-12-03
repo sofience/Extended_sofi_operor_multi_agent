@@ -1,4 +1,4 @@
-from sofi_operor_multi_agent_prototype import agent_step, OperorRuntime
+from sofi_operor_multi_agent_prototype.py import agent_step, OperorRuntime
 
 def test_agent_step_basic_runs():
     runtime = OperorRuntime()

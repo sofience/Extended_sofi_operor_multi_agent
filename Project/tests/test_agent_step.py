@@ -33,3 +33,51 @@ def test_agent_step_trace_grows():
     last = runtime.trace_log.entries[-1]
     assert "magnitude" in (last.delta_phi_vec or {})
     assert "severity" in (last.delta_phi_vec or {})
+
+
+# -------------------------------
+# Δφ Propagation Test 추가됨
+# -------------------------------
+def test_delta_phi_propagation_env_change():
+    runtime = OperorRuntime()
+
+    # 1) baseline 환경
+    agent_step(
+        "baseline",
+        env_state={"need_level": 0.5, "supply_level": 0.5},
+        runtime=runtime,
+    )
+
+    # 2) 거의 같은 환경 → Δφ 변화 최소 예상
+    agent_step(
+        "same env again",
+        env_state={"need_level": 0.5, "supply_level": 0.5},
+        runtime=runtime,
+    )
+
+    # 3) 급격히 다른 환경 → Δφ가 달라져야 한다
+    agent_step(
+        "env changed",
+        env_state={"need_level": 0.9, "supply_level": 0.1},
+        runtime=runtime,
+    )
+
+    assert len(runtime.trace_log.entries) >= 3
+
+    base = runtime.trace_log.entries[-3].delta_phi_vec or {}
+    same = runtime.trace_log.entries[-2].delta_phi_vec or {}
+    changed = runtime.trace_log.entries[-1].delta_phi_vec or {}
+
+    # Δφ 벡터 기본 키 체크
+    for vec in (base, same, changed):
+        assert "magnitude" in vec
+        assert "severity" in vec
+
+    # 환경 변화가 있었으므로 last Δφ 값은 baseline과 달라야 함
+    assert (
+        changed["magnitude"],
+        changed["severity"],
+    ) != (
+        base["magnitude"],
+        base["severity"],
+    )

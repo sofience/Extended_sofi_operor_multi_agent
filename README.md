@@ -1,5 +1,12 @@
 ```python
-실행 로그 케이스
+============================= test session starts ==============================
+platform linux -- Python 3.11.14, pytest-9.0.1, pluggy-1.6.0
+rootdir: /home/runner/work/Extended_sofi_operor_multi_agent/Extended_sofi_operor_multi_agent/Project
+collected 4 items
+
+tests/test_agent_step.py ....                                            [100%]
+
+============================== 4 passed in 0.04s ===============================
 ```
 
 # Sofience-Operor

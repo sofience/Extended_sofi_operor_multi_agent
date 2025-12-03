@@ -1,3 +1,6 @@
+
+1. pytest: parallelism + Δφ propagation test
+
 ```python
 ============================= test session starts ==============================
 platform linux -- Python 3.11.14, pytest-9.0.1, pluggy-1.6.0
@@ -8,6 +11,21 @@ tests/test_agent_step.py ....                                            [100%]
 
 ============================== 4 passed in 0.04s ===============================
 ```
+
+2. Async multi-agent execution test
+
+```python
+Run pytest
+============================= test session starts ==============================
+platform linux -- Python 3.11.14, pytest-9.0.1, pluggy-1.6.0
+rootdir: /home/runner/work/Extended_sofi_operor_multi_agent/Extended_sofi_operor_multi_agent/Project
+collected 4 items
+
+tests/test_agent_step.py ....                                            [100%]
+
+============================== 4 passed in 0.09s ===============================
+```
+
 ---
 
 🚀 Sofience–Operor Multi-Agent Engine

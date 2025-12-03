@@ -1,4 +1,9 @@
+```python
+실행 로그 케이스
+```
+
 Sofience-Operor
+
 What should a market-ready, platform-agnostic multi-agent look like—one that avoids the vendor lock-in and self-collision issues of current systems?
 A multi-agent framework built on a philosophical foundation: Operor ergo sum (I operate, therefore I am).
 �
@@ -26,13 +31,11 @@ Full trace logging + observability hooks
 Core Philosophy: The Three Axioms
 Every decision flows through these principles:
 1. 되고 싶다 (Want to become)
-   → Affirm continued operation of self and system
-
+Affirm continued operation of self and system
 2. 되기 싫다 (Don't want to cease)
-   → Avoid self-destruction or system breakdown
-
+Avoid self-destruction or system breakdown
 3. 타자 강요 금지 (No coercion of others)
-   → External entities have their own origins; never force them
+External entities have their own origins; never force them
 This isn't just a prompt—it's the root proposition that all agents share.
 Architecture
 User Input
@@ -63,7 +66,7 @@ User Input
 │              Δφ Calculation + Severity Check            │
 │                          │                              │
 │              ┌───────────┴───────────┐                  │
-│              │  severity ≥ medium?   │──── no ────┐     │
+│              │  severity >= medium?  │──── no ────┐     │
 │              └───────────┬───────────┘            │     │
 │                     yes  │                        │     │
 │                          ▼                        │     │
@@ -79,7 +82,7 @@ User Input
                                     ▼
                              Final Response
 Key Features
-🔄 Provider-Agnostic LLM Layer
+Provider-Agnostic LLM Layer
 from sofience_operor import LLMConfig, call_llm
 
 cfg = LLMConfig(
@@ -90,7 +93,7 @@ cfg = LLMConfig(
 )
 
 response = call_llm("You are helpful.", "Hello!", cfg=cfg)
-📐 Δφ (Phase Change) Detection
+Δφ (Phase Change) Detection
 Measures state drift across three axes:
 Axis
 Measures
@@ -100,10 +103,9 @@ Internal system state (risk, stability, progress, complexity)
 Semantic surface (instructionality, emotionality, complexity)
 ΔVoid
 Need-supply gap
-When magnitude ≥ 0.65 or severity ∈ {medium, high}:
-→ Triggers recursive goal refinement automatically
-🛡️ Hybrid Policy Engine
-from sofience_operor import ThreeAxiomEngine, register_policy_engine
+When magnitude >= 0.65 or severity in {medium, high}, triggers recursive goal refinement automatically.
+Hybrid Policy Engine
+from sofience_operor import ThreeAxiomEngine, register_policy_engine, LLMConfig
 
 engine = ThreeAxiomEngine(
     use_semantic=True,  # LLM-based evaluation
@@ -111,7 +113,7 @@ engine = ThreeAxiomEngine(
 )
 register_policy_engine(engine)
 Combines keyword heuristics with LLM semantic analysis for context-aware ethics checking.
-🔒 Multi-Tenant Isolation
+Multi-Tenant Isolation
 from sofience_operor import OperorRuntime, agent_step
 
 # Each tenant gets isolated state
@@ -121,7 +123,7 @@ tenant_b_runtime = OperorRuntime()
 # No cross-contamination
 response_a = agent_step("Hello", runtime=tenant_a_runtime)
 response_b = agent_step("Hello", runtime=tenant_b_runtime)
-📊 Full Observability
+Full Observability
 from sofience_operor import (
     register_llm_hook,
     register_delta_phi_observer,
@@ -132,9 +134,11 @@ from sofience_operor import (
 register_llm_hook(lambda event: prometheus.observe(event))
 
 # Alerting on drift
-register_delta_phi_observer(lambda delta, curr, prev: 
-    slack.alert(f"Drift: {delta['severity']}") if delta["severity"] == "high" else None
-)
+def alert_on_high_drift(delta, curr, prev):
+    if delta["severity"] == "high":
+        slack.alert(f"Drift: {delta['severity']}")
+
+register_delta_phi_observer(alert_on_high_drift)
 
 # Custom compliance
 register_policy_engine(MyComplianceEngine())
@@ -145,6 +149,7 @@ cd sofience-operor
 pip install httpx  # optional, for real LLM calls
 Run in Echo Mode (no API needed)
 python sofience_operor.py
+Output:
 === Sofience_operor-multi-agent-prototype ===
 Ctrl+C 또는 'exit' 입력 시 종료.
 
@@ -153,6 +158,7 @@ Ctrl+C 또는 'exit' 입력 시 종료.
 ...
 Run Tests
 pytest tests/ -v
+Output:
 tests/test_agent.py::test_agent_step_basic_runs PASSED
 tests/test_agent.py::test_agent_step_trace_grows PASSED
 Connect to Real LLM
@@ -223,7 +229,7 @@ class FinanceComplianceEngine(PolicyEngine):
     jurisdiction = "KR"
     provider = "internal"
     
-    def evaluate(self, text: str) -> EthicalReport:
+    def evaluate(self, text):
         violations = []
         
         # Your compliance logic
@@ -246,8 +252,8 @@ from sofience_operor import register_delta_phi_observer
 def drift_alerter(delta_phi, curr_phase, prev_phase):
     if delta_phi["severity"] == "high":
         send_slack_alert(
-            f"⚠️ High drift detected\n"
-            f"Magnitude: {delta_phi['magnitude']:.3f}\n"
+            f"High drift detected - "
+            f"Magnitude: {delta_phi['magnitude']:.3f} - "
             f"Goal: {curr_phase.goal_text[:100]}"
         )
     
@@ -270,7 +276,7 @@ The project includes automated tests that verify core functionality:
 # tests/test_agent.py
 
 def test_agent_step_basic_runs():
-    """Verifies basic agent execution with env_state → Δφ propagation"""
+    """Verifies basic agent execution with env_state to delta_phi propagation"""
     runtime = OperorRuntime()
     reply = agent_step(
         "간단하게 오늘 할 일을 정리해줘.",
@@ -281,7 +287,7 @@ def test_agent_step_basic_runs():
     assert len(reply) > 0
 
 def test_agent_step_trace_grows():
-    """Verifies multi-turn state accumulation and Δφ structure"""
+    """Verifies multi-turn state accumulation and delta_phi structure"""
     runtime = OperorRuntime()
     agent_step("첫 번째 입력", runtime=runtime)
     agent_step("두 번째 입력", runtime=runtime)
@@ -292,19 +298,19 @@ def test_agent_step_trace_grows():
     assert "severity" in (last.delta_phi_vec or {})
 CI runs on every push via GitHub Actions.
 Current Status
-PoC ──── Prototype ──── Alpha ──── Beta ──── Production
-                          │
-                          ├── CI/CD ✅
-                          ├── Tests ✅
-                          └── here
+PoC ---- Prototype ---- Alpha ---- Beta ---- Production
+                          |
+                          +-- CI/CD: Done
+                          +-- Tests: Done
+                          +-- here
 What's Done
 [x] Core multi-channel agent architecture
-[x] Δφ topology layer (core/surface/void)
+[x] Delta-phi topology layer (core/surface/void)
 [x] Hybrid policy engine (keyword + semantic)
 [x] Multi-tenant isolation (ContextVar + OperorRuntime)
 [x] LLM cache with namespace separation
 [x] Provider failover with exponential backoff
-[x] Observability hooks (LLM, Δφ, Policy)
+[x] Observability hooks (LLM, delta-phi, Policy)
 [x] pytest coverage (basic)
 [x] GitHub Actions CI pipeline
 What's Next
@@ -329,4 +335,4 @@ AI alignment — the Three Axioms are open for critique
 Production deployment — help us harden the async/scaling story
 Related Reading
 Operor ergo sum: A Philosophical Foundation for AI Agency (coming soon)
-Δφ Formalism: Measuring Agent Drift (coming soon)
+Delta-phi Formalism: Measuring Agent Drift (coming soon)

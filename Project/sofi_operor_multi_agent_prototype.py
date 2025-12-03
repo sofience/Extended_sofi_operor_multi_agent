@@ -1,6 +1,6 @@
 """
 
-Sofience_Operor_multi_agent_prototype.py
+sofi_operor_multi_agent_prototype.py
 
 - Root Proposition Node (Operor ergo sum)
 - 윤리 삼항 기반 Alignment Layer

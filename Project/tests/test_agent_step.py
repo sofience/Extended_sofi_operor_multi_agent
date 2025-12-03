@@ -9,7 +9,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from sofi_operor_multi_agent_prototype import (
     agent_step,
     OperorRuntime,
-    async_agent_step,  # 비동기 멀티 에이전트 실행용
+      # 비동기 멀티 에이전트 실행용
 )
 
 
